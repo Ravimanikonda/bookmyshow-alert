@@ -1,43 +1,34 @@
 import requests
 from bs4 import BeautifulSoup
 import os
-import time
 
 BOT_TOKEN = os.getenv("BOT_TOKEN")
 CHAT_ID = os.getenv("CHAT_ID")
 
-URL = "https://in.bookmyshow.com/explore/movies-hyderabad"
+URL = "https://in.bookmyshow.com/movies/hyderabad/peddi/ET00439772"
+
+TARGET_THEATRE = "Sudarshan"
 
 headers = {
-    "User-Agent": "Mozilla/5.0"
+    "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36"
 }
 
 response = requests.get(URL, headers=headers)
 
-soup = BeautifulSoup(response.text, "html.parser")
+page_text = response.text.lower()
 
-movies = soup.find_all("h3")
+if TARGET_THEATRE.lower() in page_text:
 
-movie_names = []
+    telegram_url = f"https://api.telegram.org/bot{BOT_TOKEN}/sendMessage"
 
-for movie in movies:
-    name = movie.get_text(strip=True)
+    data = {
+        "chat_id": CHAT_ID,
+        "text": f"🔥 PEDDI BOOKINGS OPENED at {TARGET_THEATRE} 🔥"
+    }
 
-    if name and name not in movie_names:
-        movie_names.append(name)
+    requests.post(telegram_url, data=data)
 
-message = "🎬 BookMyShow Movie Alerts\n\n"
+    print("Alert Sent")
 
-for movie in movie_names[:15]:
-    message += f"• {movie}\n"
-
-telegram_url = f"https://api.telegram.org/bot{BOT_TOKEN}/sendMessage"
-
-data = {
-    "chat_id": CHAT_ID,
-    "text": message
-}
-
-requests.post(telegram_url, data=data)
-
-print("Alert Sent Successfully")
+else:
+    print("Bookings Not Open Yet")
