@@ -7,7 +7,7 @@ CHAT_ID = os.getenv("CHAT_ID")
 
 URL = "https://in.bookmyshow.com/movies/hyderabad/peddi/ET00439772"
 
-TARGET_THEATRE = "peddi"
+TARGET_THEATRE = "Sudarshan"
 
 headers = {
     "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36"
